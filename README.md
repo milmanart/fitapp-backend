@@ -12,10 +12,10 @@ Spring Boot API for FitApp: auth, meals, foods, and offline data packs.
 
 ## Run
 
-`sh
+~~~sh
 docker compose up -d postgres
 ./mvnw spring-boot:run
-`
+~~~
 
 Env (see .env.example):
 - DB_HOST, DB_PORT, DB_NAME, DB_USERNAME, DB_PASSWORD
