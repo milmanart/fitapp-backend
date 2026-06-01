@@ -22,10 +22,10 @@ public interface FoodRepository extends JpaRepository<Food, UUID> {
 
     long countBySource(FoodSource source);
 
-    @Query("SELECT f FROM Food f WHERE LOWER(f.name) LIKE LOWER(CONCAT('%', :query, '%')) AND f.source = :source ORDER BY f.name")
+    @Query("SELECT f FROM Food f WHERE (LOWER(f.name) LIKE LOWER(CONCAT('%', :query, '%')) OR LOWER(COALESCE(f.brand, '')) LIKE LOWER(CONCAT('%', :query, '%'))) AND f.source = :source ORDER BY f.name")
     List<Food> findByNameContainingIgnoreCaseAndSource(@Param("query") String query, @Param("source") FoodSource source);
 
-    @Query("SELECT f FROM Food f WHERE LOWER(f.name) LIKE LOWER(CONCAT('%', :query, '%')) ORDER BY f.name")
+    @Query("SELECT f FROM Food f WHERE LOWER(f.name) LIKE LOWER(CONCAT('%', :query, '%')) OR LOWER(COALESCE(f.brand, '')) LIKE LOWER(CONCAT('%', :query, '%')) ORDER BY f.name")
     List<Food> findByNameContainingIgnoreCase(@Param("query") String query);
 
     @Query("SELECT f FROM Food f WHERE f.source = :source")

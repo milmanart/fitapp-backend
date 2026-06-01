@@ -89,10 +89,10 @@ public class MealService {
     @Transactional
     public MealResponse updateMeal(UUID mealId, UUID userId, MealRequest request) {
         Meal meal = mealRepository.findById(mealId)
-                .orElseThrow(() -> new IllegalArgumentException("Meal not found"));
+                .orElseThrow(() -> new pl.fitapp.backend.exception.NotFoundException("Meal not found"));
 
         if (!meal.getUserId().equals(userId)) {
-            throw new IllegalArgumentException("Access denied");
+            throw new pl.fitapp.backend.exception.ForbiddenException("Access denied");
         }
 
         meal.setName(request.getName());
@@ -109,10 +109,10 @@ public class MealService {
     @Transactional
     public void deleteMeal(UUID mealId, UUID userId) {
         Meal meal = mealRepository.findById(mealId)
-                .orElseThrow(() -> new IllegalArgumentException("Meal not found"));
+                .orElseThrow(() -> new pl.fitapp.backend.exception.NotFoundException("Meal not found"));
 
         if (!meal.getUserId().equals(userId)) {
-            throw new IllegalArgumentException("Access denied");
+            throw new pl.fitapp.backend.exception.ForbiddenException("Access denied");
         }
 
         mealRepository.delete(meal);

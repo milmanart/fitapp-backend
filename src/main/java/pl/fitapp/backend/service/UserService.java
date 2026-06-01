@@ -95,12 +95,16 @@ public class UserService {
     public AuthResponse refreshToken(RefreshTokenRequest request) {
         String refreshToken = request.getRefreshToken();
         String email = jwtService.extractUsername(refreshToken);
-        
+
+        if (!pl.fitapp.backend.security.JwtService.TYPE_REFRESH.equals(jwtService.extractTokenType(refreshToken))) {
+            throw new IllegalArgumentException("Invalid refresh token");
+        }
+
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-        
+
         if (!jwtService.isTokenValid(refreshToken, userDetails)) {
             throw new IllegalArgumentException("Invalid refresh token");
         }

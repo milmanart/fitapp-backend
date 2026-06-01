@@ -11,6 +11,6 @@ import java.util.UUID;
 @Repository
 public interface MealRepository extends JpaRepository<Meal, UUID> {
     List<Meal> findByUserIdOrderByEatenAtDesc(UUID userId);
-    
+
     List<Meal> findByUserIdAndEatenAtBetweenOrderByEatenAtDesc(UUID userId, LocalDateTime start, LocalDateTime end);
 }

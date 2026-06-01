@@ -4,7 +4,7 @@ spring:
 
 etl:
   recipenlg:
-    csv-path: /home/milmanart/fitapp-backend/dataset/full_dataset.csv
+    csv-path: ${RECIPE_NLG_CSV_PATH:dataset/full_dataset.csv}
     top-dishes: 2000
     min-recipes-per-dish: 30
     min-ingredient-support: 0.3
@@ -16,4 +16,4 @@ etl:
 logging:
   level:
     root: INFO
-    pl.fitapp.backend.etl: DEBUG
+    pl.fitapp.backend.etl: INFO

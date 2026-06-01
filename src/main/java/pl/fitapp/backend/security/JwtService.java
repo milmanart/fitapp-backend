@@ -18,6 +18,9 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
+    public static final String TYPE_ACCESS = "access";
+    public static final String TYPE_REFRESH = "refresh";
+
     @Value("${jwt.secret}")
     private String secretKey;
 
@@ -35,6 +38,10 @@ public class JwtService {
         return UUID.fromString(extractClaim(token, claims -> claims.get("userId", String.class)));
     }
 
+    public String extractTokenType(String token) {
+        return extractClaim(token, claims -> claims.get("type", String.class));
+    }
+
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
@@ -46,12 +53,14 @@ public class JwtService {
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails, UUID userId) {
         extraClaims.put("userId", userId.toString());
+        extraClaims.put("type", TYPE_ACCESS);
         return buildToken(extraClaims, userDetails, jwtExpiration);
     }
 
     public String generateRefreshToken(UserDetails userDetails, UUID userId) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("userId", userId.toString());
+        claims.put("type", TYPE_REFRESH);
         return buildToken(claims, userDetails, refreshExpiration);
     }
 

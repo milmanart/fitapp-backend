@@ -6,8 +6,8 @@ spring:
 
   datasource:
     url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:fitapp}
-    username: ${DB_USERNAME:fitapp}
-    password: ${DB_PASSWORD:fitapp}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -28,11 +28,31 @@ server:
   port: ${SERVER_PORT:8080}
 
 jwt:
-  secret: ${JWT_SECRET:dGhpc2lzYXZlcnlsb25nc2VjcmV0a2V5Zm9yand0dG9rZW5zaWduaW5nYW5kaXRzaG91bGRiZWF0bGVhc3QyNTZiaXRz}
-  expiration: ${JWT_EXPIRATION:86400000}  # 24 hours in milliseconds
-  refresh-expiration: ${JWT_REFRESH_EXPIRATION:604800000}  # 7 days in milliseconds
+  secret: ${JWT_SECRET}
+  expiration: ${JWT_EXPIRATION:86400000}
+  refresh-expiration: ${JWT_REFRESH_EXPIRATION:604800000}
+
+usda:
+  fdc:
+    enabled: ${USDA_FDC_ENABLED:true}
+    api-key: ${USDA_API_KEY:DEMO_KEY}
+    base-url: ${USDA_API_BASE_URL:https://api.nal.usda.gov/fdc/v1/foods/search}
+    seed-on-startup: ${USDA_FDC_SEED_ON_STARTUP:true}
 
 logging:
   level:
     root: INFO
-    pl.fitapp: DEBUG
+    pl.fitapp: INFO
+
+vision:
+  groq:
+    api-key: ${GROQ_API_KEY:}
+    model: meta-llama/llama-4-scout-17b-16e-instruct
+    base-url: https://api.groq.com/openai/v1/chat/completions
+
+github:
+  copilot:
+    github-token: ${GITHUB_COPILOT_TOKEN:}
+    token-url: https://api.github.com/copilot_internal/v2/token
+    api-url: https://api.individual.githubcopilot.com
+    model: gpt-5-mini

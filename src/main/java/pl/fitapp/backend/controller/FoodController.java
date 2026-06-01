@@ -26,15 +26,16 @@ public class FoodController {
     public ResponseEntity<List<FoodDTO>> searchFoods(
             @RequestParam String query,
             @RequestParam(defaultValue = "en") String locale,
-            @RequestParam(defaultValue = "20") int limit) {
+            @RequestParam(defaultValue = "20") int limit,
+            @RequestParam(defaultValue = "true") boolean remote) {
 
-        log.info("Search request: query='{}', locale='{}', limit={}", query, locale, limit);
+        log.info("Search request: query='{}', locale='{}', limit={}, remote={}", query, locale, limit, remote);
 
         if (query == null || query.trim().isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
 
-        List<Food> foods = foodService.searchFoods(query.trim(), locale);
+        List<Food> foods = foodService.searchFoods(query.trim(), locale, limit, remote);
 
         List<FoodDTO> dtos = foods.stream()
                 .map(this::toDTO)
@@ -97,11 +98,12 @@ public class FoodController {
     public ResponseEntity<Map<String, Object>> getStats() {
         long totalCount = foodService.getTotalCount();
         long usdaCount = foodService.getCountBySource(FoodSource.USDA);
+        long offCount = foodService.getCountBySource(FoodSource.OPENFOODFACTS);
 
         Map<String, Object> stats = Map.of(
                 "total", totalCount,
                 "usda", usdaCount,
-                "openfoodfacts", 0,
+                "openfoodfacts", offCount,
                 "manual", 0
         );
 

@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import pl.fitapp.backend.service.FoodService;
 import pl.fitapp.backend.service.UsdaImportService;
 
 import java.util.Map;
@@ -16,6 +17,7 @@ import java.util.Map;
 public class AdminController {
 
     private final UsdaImportService usdaImportService;
+    private final FoodService foodService;
 
     @PostMapping("/import-usda")
     @PreAuthorize("hasRole('ADMIN')")
@@ -27,7 +29,17 @@ public class AdminController {
         } catch (Exception e) {
             log.error("Failed to import USDA data", e);
             return ResponseEntity.internalServerError()
-                .body(Map.of("status", "error", "message", e.getMessage()));
+                    .body(Map.of("status", "error", "message", e.getMessage()));
         }
+    }
+
+    @PostMapping("/seed-fastfood")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Map<String, Object>> seedFastFood() {
+        int inserted = foodService.warmupPopularFastFood();
+        return ResponseEntity.ok(Map.of(
+                "status", "success",
+                "inserted", inserted
+        ));
     }
 }
