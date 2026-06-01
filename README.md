@@ -1,32 +1,27 @@
 # FitApp Backend
 
-Spring Boot API for FitApp: auth, meals, foods, and offline data packs.
+Backend for FitApp — mobile meal tracking app.
+
+## What it does
+
+- User registration and login with JWT tokens
+- Meal logging — add, edit, delete meals with nutrition info
+- Food search — local database, USDA FoodData Central, OpenFoodFacts
+- Barcode lookup — find product by EAN/UPC barcode
+- Dish templates — pre-built dishes with default ingredients and portions
+- Food photo recognition — sends image to Groq or GitHub Copilot API, returns dish name and ingredients
+- Offline data packs — versioned bundles of dish templates and food dictionary, downloaded by the app on first run
 
 ## Stack
 
-- Java 21
-- Spring Boot 3 (Web, Security, Data JPA, Validation)
-- PostgreSQL + Flyway
-- JWT (jjwt)
-- Maven
+- Java 21, Spring Boot 3.5
+- PostgreSQL 16, Flyway
+- Docker
 
-## Run
+## Deployment
 
-~~~sh
-docker compose up -d postgres
-./mvnw spring-boot:run
-~~~
+```sh
+~/fitapp-backend/redeploy.sh
+```
 
-Env (see .env.example):
-- DB_HOST, DB_PORT, DB_NAME, DB_USERNAME, DB_PASSWORD
-- SERVER_PORT, SPRING_PROFILES_ACTIVE
-- JWT_SECRET
-
-## Endpoints
-
-- GET /health
-- POST /auth/register, POST /auth/login, POST /auth/refresh
-- GET /profile, PUT /profile, PUT /profile/password, DELETE /profile
-- GET /meals, GET /meals/nutrition, POST /meals, PUT /meals/{id}, DELETE /meals/{id}
-- GET /api/foods/search, GET /api/foods/resolve/{foodKey}, POST /api/foods/resolve-batch
-- GET /api/packs/versions, GET /api/packs/dish-templates, GET /api/packs/dictionary/{lang}, GET /api/packs/mini-usda
+Builds the jar, creates a Docker image and restarts the container.
